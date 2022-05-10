@@ -157,11 +157,106 @@ void postorderTraversal(Node* ptr) //재귀 후위 순환 방식
 
 int insert(Node* head, int key) // 삽입 함수
 {
-	;
+	 Node* newNode = (Node*)malloc(sizeof(Node));//입력받은 key값을 넣을 새로운 노드 생성
+    newNode->key = key;//Newnode->key에 입력받은 key값 대입
+    newNode->left = NULL;//newNode->left은 NULL
+    newNode->right = NULL;//newNode->right은 NULL
+
+    if (head->left == NULL) {//입력받은 노드가없다면 즉 처음 노드를 입력하면
+        head->left = newNode;//head->left에 newnode연결
+        return 1;
+    }
+
+    /* head->left is the root */
+    Node* ptr = head->left;//ptr은 head->left가 가르키는 노드
+
+    Node* parentNode = NULL;//parentNode를 NULL로설정
+    while (ptr != NULL) {//ptr이 NULL이 아닐때 까지 반복
+
+       /* if there is a node for the key, then just return */
+        if (ptr->key == key) return 1;//ptr의key값이랑 입력받은 key값이 같은경우 함수 종료
+
+        /* we have to move onto children nodes,
+         * keep tracking the parent using parentNode */
+        parentNode = ptr;//parentNode가 ptr노드랑 같게해줌
+
+        /* key comparison, if current node's key is greater than input key
+         * then the new node has to be inserted into the right subtree;
+         * otherwise the left subtree.
+         */
+        if (ptr->key < key)//ptr의 key값이 입력받은 key값보다 작은경우
+            ptr = ptr->right;//ptr을 ptr->right로 바꿔줌 만약 ptr->right가 NULL이라면 while문 탈출
+        else//ptr의 key값이 입력받은 key값보다 큰경우
+            ptr = ptr->left;//ptr을 ptr->left로 바꿔줌 만약 ptr->left가 NULL이라면 while문 탈출
+    }
+
+    /* linking the new node to the parent */
+    if (parentNode->key > key)//parentNode의 key값이 입력받은 key값보다 작은경우
+        parentNode->left = newNode;//parentNode의 왼쪽자식을 새로만든 노드로 만듬
+    else
+        parentNode->right = newNode;//parentNode의 오르쪽자식을 새로만든 노드로 만듬
+    return 1;
 }
 int deleteLeafNode(Node* head, int key)
 {
-	;
+    if (head == NULL) {//head를 생성하지 않을경우 오류메세지 출력
+        printf("\n Nothing to delete!!\n");
+        return -1;
+    }
+
+    if (head->left == NULL) {//입력받은 노드가 없을경우 오류 메세지 출력
+        printf("\n Nothing to delete!!\n");
+        return -1;
+    }
+
+    /* head->left is the root */
+    Node* ptr = head->left;//ptr을 head->left를 가르키게함
+
+
+    /* we have to move onto children nodes,
+     * keep tracking the parent using parentNode */
+    Node* parentNode = head;//parentNode를 head노드로 설정
+
+    while (ptr != NULL) {//ptr이 NULL이 될떄 까지 반복
+
+        if (ptr->key == key) {//ptr의key값이 입력받은 key값이랑 같은경우
+            if (ptr->left == NULL && ptr->right == NULL) {//ptr->left랑 ptr->right가 NULL일떄 실행 즉 ptr의 자식노드가 없을때실행
+
+               /* root node case */
+                if (parentNode == head)//입력받은 노드가 하나일때 그노드를 삭제할려할때
+                    head->left = NULL;//head->left를 NULL해줌 
+
+                 /* left node case or right case*/
+                if (parentNode->left == ptr)//parentNode->left가ptr일때
+                    parentNode->left = NULL;//parentNode->left을 NULL해줌
+                else//parentNode->right가ptr일때
+                    parentNode->right = NULL;//parentNode->right을 NULL해줌
+
+                free(ptr);
+            }
+            else {
+                printf("the node [%d] is not a leaf \n", ptr->key);//입력받은 key값이 없다
+            }
+            return 1;
+        }
+
+        /* keep the parent node */
+        parentNode = ptr;//parentNode가 ptr노드랑 같게해줌
+
+        /* key comparison, if current node's key is greater than input key
+         * then the new node has to be inserted into the right subtree;
+         * otherwise the left subtree.
+         */
+        if (ptr->key < key)//ptr->key값이 입력받은 key값보다 작은경우
+            ptr = ptr->right;//ptr을 ptr->right로 바꿔줌
+        else//ptr->key값이 입력받은 key값보다 큰경우
+            ptr = ptr->left;//ptr을 ptr->left로 바꿔줌
+
+
+    }
+
+    printf("Cannot find the node for key [%d]\n ", key);//입력받은 key값이 없다는 메세지 출력
+    return 1;
 }
 
 Node* searchRecursive(Node* ptr, int key)// 재귀 방식으로 search 하는 함수 구현
