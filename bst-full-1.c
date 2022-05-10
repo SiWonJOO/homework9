@@ -293,14 +293,30 @@ Node* searchIterative(Node* head, int key) // 순회방식 search 함수 구현
 
 void freeNode(Node* ptr) // 노드의 메모리 할당 해제하는 함수
 {
- 	 ;
+    if (ptr) {
+        freeNode(ptr->left); // ptr의 왼쪽 자식을 재귀를 통해 메모리 할당해제한다.
+        freeNode(ptr->right); //ptr의 오른쪽 자식을 재귀를 통해 메모리 할당해제한다.
+        free(ptr); // ptr의 할당된 메모리 해제한다. 
+    }
 }
 
 int freeBST(Node* head) // 이진탐색트리 메모리 할당해제하는 함수
 {
 
-  	 ;
+    if (head->left == head)// 노드가 없다면
+    {
+        free(head);//head만 할당해제
+        return 1;
+    }
+
+    Node* p = head->left; //p는 head->left롤설정
+
+    freeNode(p); 
+
+    free(head); // head 할당된 메모리 해제
+    return 1;
 }
+
 
 
 
