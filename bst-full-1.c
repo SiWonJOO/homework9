@@ -261,11 +261,34 @@ int deleteLeafNode(Node* head, int key)
 
 Node* searchRecursive(Node* ptr, int key)// 재귀 방식으로 search 하는 함수 구현
 {
-	;
+    if (ptr == NULL) // 만약 ptr 이 비어있다면
+        return NULL; 
+
+    if (ptr->key < key) // ptr의key값이 key값보다 작은경우
+        ptr = searchRecursive(ptr->right, key); // 재귀함수를 통해서 ptr값을 ptr->right로 바꿔줌
+    else if (ptr->key > key) // ptr의key값이 key값보다 큰경우
+        ptr = searchRecursive(ptr->left, key); // 재귀함수를 통해서 ptr값을 ptr->left로 바꿔줌
+
+      /* if ptr->key == key */
+    return ptr; // ptr리턴
+
 }
 Node* searchIterative(Node* head, int key) // 순회방식 search 함수 구현
 {
- 	 ;
+    /* root node */
+    Node* ptr = head->left; // ptr=head->left로 설정
+
+    while (ptr != NULL)// ptr의 끝까지 반복한다.
+    {
+        if (ptr->key == key) // ptr의 key값이 입력받은 key값이랑 같으면
+            return ptr; // ptr 리턴
+
+        if (ptr->key < key) ptr = ptr->right; //ptr의 key값이 key값보다 작은경우 ptr을 ptr->right로 바까줌
+        else 
+            ptr = ptr->left; // ptr을 ptr->left로 바까줌
+    }
+
+    return NULL;
 }
 
 void freeNode(Node* ptr) // 노드의 메모리 할당 해제하는 함수
